@@ -1,0 +1,195 @@
+package Tugas2;
+import java.util.Scanner;
+/*
+ * @author Januar Abidin
+ */
+public class AdminMenu {
+
+    static Scanner scanner = new Scanner(System.in);
+
+    public static void tambahMenu(Menu[] menu) {
+        CustomerMenu.tampilDaftarMenu(menu);
+
+        while (true) {
+
+            System.out.println("Masukkan Menu yang ingin ditambahkan: ");
+            String namaMenu = masukkanNamaMenu();
+            System.out.println("Masukkan Harganya: ");
+            int hargaMenu = masukkanHargaMenu();
+            System.out.println("Masukkan kategorinya: ");
+            String kategoriMenu = masukkanKategoriMenu();
+
+            Menu[] menuBaru = new Menu[menu.length + 1];
+            System.arraycopy(menu, 0, menuBaru, 0, menu.length);
+            menuBaru[menuBaru.length - 1] = new Menu(namaMenu, hargaMenu, kategoriMenu);
+
+            menu = menuBaru;
+
+            System.out.println("Menu berhasil ditambahkan: " + namaMenu);
+            CustomerMenu.tampilDaftarMenu(menu);
+
+            System.out.println("Apakah sudah selesai?");
+            boolean selesaiUbah = masukkanKonfirmasi();
+            if (selesaiUbah){
+                break;
+            }
+        }
+        Main.menuAdmin(menu);
+    }
+
+    public static void ubahHarga(Menu[] menu) {
+        tampilDaftarMenuDenganIndexNomor(menu);
+
+        while (true) {
+            System.out.print("Masukkan Nomor Menu yang harganya ingin diubah: ");
+            int nomorMenu = masukkanNomorMenu(menu);
+            System.out.print("Masukkan Harga Terbaru: ");
+            int hargaMenu = masukkanHargaMenu();
+
+            System.out.println("Apakah Anda yakin?");
+            boolean Ya = masukkanKonfirmasi();
+
+            if (Ya){
+                editedMenu(menu, nomorMenu, hargaMenu);
+                System.out.println("Harga Menu berhasil diubah: " + menu[nomorMenu-1].getNama() + " = " + menu[nomorMenu-1].getHarga());
+            } else {
+                System.out.println("Harga Menu gagal diibah");
+            }
+
+            tampilDaftarMenuDenganIndexNomor(menu);
+
+            System.out.println("Apakah sudah selesai?");
+            boolean selesaiUbah = masukkanKonfirmasi();
+
+            if (selesaiUbah){
+                break;
+            }
+        }
+        Main.menuAdmin(menu);
+    }
+
+    private static void editedMenu(Menu[] menu, int nomorMenu, int hargaMenu) {
+        for (Menu m : menu) {
+            if (m.getNama().equalsIgnoreCase(menu[nomorMenu - 1].getNama())) {
+                m.setHarga(hargaMenu);
+            }
+        }
+    }
+
+    public static void hapusMenu(Menu[] menu) {
+        tampilDaftarMenuDenganIndexNomor(menu);
+
+        while (true) {
+            System.out.print("Masukkan Nomor Menu yang ingin dihapus: ");
+            int nomorMenu = masukkanNomorMenu(menu);
+
+            System.out.println("Apakah Anda yakin?");
+            boolean Ya = masukkanKonfirmasi();
+
+            if (Ya){
+                System.out.println("Menu berhasil dihapus: " + menu[nomorMenu-1].getNama());
+                menu = deletedMenu(menu, nomorMenu);
+            } else {
+                System.out.println("Menu gagal dihapus");
+            }
+
+
+            System.out.println("Apakah sudah selesai?");
+            boolean selesaiUbah = masukkanKonfirmasi();
+
+            if (selesaiUbah){
+                break;
+            }
+        }
+        Main.menuAdmin(menu);
+    }
+
+    private static Menu[] deletedMenu(Menu[] menu, int nomorMenu) {
+        Menu[] menuBaru = new Menu[menu.length - 1];
+        System.arraycopy(menu, 0, menuBaru, 0, nomorMenu - 1);
+        System.arraycopy(menu, nomorMenu, menuBaru, nomorMenu - 1, menu.length - nomorMenu);
+        return menuBaru;
+    }
+
+    private static boolean masukkanKonfirmasi() {
+        System.out.println("1. Ya");
+        System.out.println("0. Tidak");
+
+        int userInput = scanner.nextInt();
+
+        boolean result;
+
+        if (userInput == 1) {
+            result = true;
+        } else if (userInput == 0) {
+            result = false;
+        } else {
+            System.out.println("Masukkan pilihan yang sesuai.1 atau 0");
+            return masukkanKonfirmasi();
+        }
+
+        return result;
+    }
+
+    private static void tampilDaftarMenuDenganIndexNomor(Menu[] menu) {
+        for (int i = 0; i < menu.length; i++) {
+            System.out.println((i + 1) + ". " + menu[i].getNama() + " (" + menu[i].getHarga() + ")");
+        }
+    }
+
+    public static String masukkanKategoriMenu() {
+
+        System.out.println("1. Makanan");
+        System.out.println("2. Minuman");
+
+        int kategoriMenu = scanner.nextInt();
+        if (kategoriMenu == 1) {
+            return "Makanan";
+        } else if (kategoriMenu == 2) {
+            return "Minuman";
+        } else {
+            System.out.println("Masukkan sesuai Kategori.");
+            return masukkanKategoriMenu();
+        }
+    }
+
+    public static int masukkanHargaMenu() {
+        int hargaMenu = 0;
+        try {
+            hargaMenu = scanner.nextInt();
+        } catch (java.util.InputMismatchException e) {
+            System.out.println("Input Harga Tidak Valid.");
+            return masukkanHargaMenu();
+        }
+        return hargaMenu;
+    }
+
+    public static String masukkanNamaMenu() {
+        String namaMenu = scanner.nextLine();
+
+        if (namaMenu.isEmpty()) {
+            System.out.println("Masukkan Nama Menu.");
+            return masukkanNamaMenu();
+        } else {
+            return namaMenu;
+        }
+    }
+
+    public static int masukkanNomorMenu(Menu[] menu) {
+        int nomorMenu = 0;
+        try {
+            nomorMenu = scanner.nextInt();
+        } catch (java.util.InputMismatchException e) {
+            System.out.println("Input nomor menu tidak valid.");
+            return masukkanNomorMenu(menu);
+        }
+
+        if (nomorMenu < 1 || nomorMenu > menu.length) {
+            System.out.println("Nomor menu tidak valid, masukkan nomor menu: ");
+            return masukkanNomorMenu(menu);
+        } else {
+            return nomorMenu;
+        }
+    }
+
+}
