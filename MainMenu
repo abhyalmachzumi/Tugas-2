@@ -1,0 +1,79 @@
+package Tugas2;
+import java.util.ArrayList;
+import java.util.Scanner;
+/*
+ * @author Januar Abidin
+ */
+public class Main {
+    public static void main( String[] args) {
+
+        Menu[] menu = new Menu[]{
+                new Menu("Ayam Penyet", 20000, "Makanan"),
+                new Menu("Ayam Bakar", 25000, "Makanan"),
+                new Menu("Bebek Bakar", 28000, "Makanan"),
+                new Menu("Soto Tangkar", 30000, "Makanan"),
+                
+                new Menu("Air Mineral", 5000, "Minuman"),
+                new Menu("Es Teh Manis", 8000, "Minuman"),
+                new Menu("Es Jeruk", 10000, "Minuman"),
+                new Menu("Kopi Panas", 6000, "Minuman")
+        };
+
+        pilihUser(menu);
+
+    }
+
+    public static void pilihUser(Menu[] menu) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("\t\tWelcome to Rumah Nenek Restaurant\n");
+        System.out.println("Silahkan pilih user:");
+        System.out.println("1. Pelanggan");
+        System.out.println("2. Admin");
+
+        int pilihanUser = scanner.nextInt();
+        if (pilihanUser == 1) {
+            System.out.println("Anda login sebagai Pelanggan");
+            System.out.println("\t----Dapatkan Penawaran Spesial Bulan Ini----");
+         System.out.println("\n*Promo BOGO minuman untuk pembelian diatas Rp.50.000\n*Diskon 10% untuk pembelian diatas Rp.100.000\n");
+            menuCustomer(menu);
+        } else if (pilihanUser == 2) {
+            System.out.println("Anda login sebagai Admin");
+            menuAdmin(menu);
+        } else {
+            System.out.println("Pilihan Tidak Valid");
+            pilihUser(menu);
+        }
+    }
+
+    private static void menuCustomer(Menu[] menu) {
+
+        
+        CustomerMenu.tampilDaftarMenu(menu);
+
+        CustomerMenu.terimaPesanan(menu);
+    }
+
+    public static void menuAdmin(Menu[] menu) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Apakah anda ingin mengubah harga / menambah menu?:");
+        System.out.println("1. Tambah menu");
+        System.out.println("2. Ubah harga");
+        System.out.println("3. Hapus menu");
+        System.out.println("4. Selesai");
+
+        int pilihanUser = scanner.nextInt();
+
+        if (pilihanUser == 1) {
+            AdminMenu.tambahMenu(menu);
+        } else if (pilihanUser == 2) {
+            AdminMenu.ubahHarga(menu);
+        } else if (pilihanUser == 3) {
+            AdminMenu.hapusMenu(menu);
+        } else if (pilihanUser == 4) {
+            pilihUser(menu);
+        } else {
+            System.out.println("Pilihan tidak valid");
+            menuAdmin(menu);
+        }
+    }
+}
